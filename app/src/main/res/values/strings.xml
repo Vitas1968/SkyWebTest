@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SkyWebTest</string>
+    <string name="title_home">Images</string>
+    <string name="title_dashboard">Authorization</string>
+    <string name="textview">Elon Mask</string>
+
+</resources>
