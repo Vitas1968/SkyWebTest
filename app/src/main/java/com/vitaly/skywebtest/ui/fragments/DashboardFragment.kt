@@ -4,29 +4,53 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.vitaly.skywebtest.R
+import com.vitaly.skywebtest.ui.adapters.ImageListAdapter
+import com.vitaly.skywebtest.ui.fragments.baseframent.BaseFragment
+import com.vitaly.skywebtest.utils.State
 import com.vitaly.skywebtest.viewmodel.DashboardViewModel
+import kotlinx.android.synthetic.main.fragment_dashboard.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class DashboardFragment : Fragment() {
+class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+
+    override val viewModel: DashboardViewModel by viewModel()
+    private lateinit var photosAdapter: ImageListAdapter
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-                ViewModelProvider(this).get(DashboardViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+        return inflater.inflate(R.layout.fragment_dashboard, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRecycler()
+        initState()
+    }
+
+    private fun initRecycler() {
+        photosAdapter = ImageListAdapter { viewModel.retry() }
+        rv_images.adapter = photosAdapter
+        viewModel.imageList.observe(viewLifecycleOwner, {
+            photosAdapter.submitList(it)
         })
-        return root
+    }
+
+    private fun initState() {
+        main_txt_error.setOnClickListener { viewModel.retry() }
+        viewModel.getState().observe(viewLifecycleOwner, Observer { state ->
+            progress_bar.visibility =
+                if (viewModel.listIsEmpty() && state == State.LOADING) View.VISIBLE else View.GONE
+            main_txt_error.visibility =
+                if (viewModel.listIsEmpty() && state == State.ERROR) View.VISIBLE else View.GONE
+            if (!viewModel.listIsEmpty()) {
+                photosAdapter.setState(state ?: State.DONE)
+            }
+        })
     }
 }
