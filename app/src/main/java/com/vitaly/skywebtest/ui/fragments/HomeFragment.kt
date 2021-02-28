@@ -17,8 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 private const val FRAGMENT_DIALOG_TAG = "team-5d62-46bf-ab6"
 
 class HomeFragment : BaseFragment<HomeViewModel>() {
-
-
+    
     override val viewModel: HomeViewModel by viewModel()
     private val progressDialog: ProgressDialogFragment by lazy {
         ProgressDialogFragment()
