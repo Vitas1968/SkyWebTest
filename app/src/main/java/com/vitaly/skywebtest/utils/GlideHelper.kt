@@ -1,4 +1,4 @@
-package com.vitaly.newspagingsample.utils
+package com.vitaly.skywebtest.utils
 
 import android.widget.ImageView
 import com.bumptech.glide.Glide
