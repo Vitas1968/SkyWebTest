@@ -18,6 +18,8 @@ class HomeViewModel(
     private val validationEmailLiveData = MutableLiveData<Boolean>()
     private val validationPasswordLiveData = MutableLiveData<Boolean>()
     private val validationSharedLiveData = MutableLiveData<Boolean>()
+    private val emailIsNotBlankLiveData = MutableLiveData<Boolean>()
+    private val passwordIsNotBlankLiveData = MutableLiveData<Boolean>()
     private val validation: Validation = Validation()
 
     init {
@@ -25,6 +27,10 @@ class HomeViewModel(
     }
 
     fun subscribeOnWeatherReady(): LiveData<WeatherReady> = weatherReadyLiveData
+
+    fun subscribeOnEmailIsNotBlank(): LiveData<Boolean> = emailIsNotBlankLiveData
+
+    fun subscribeOnPasswordIsNotBlank(): LiveData<Boolean> = passwordIsNotBlankLiveData
 
     fun subscribeOnProgress(): LiveData<Boolean> = progressLiveData
 
@@ -36,13 +42,30 @@ class HomeViewModel(
 
     fun subscribeOnError(): LiveData<Throwable> = errorLiveData
 
+    fun checkEmailIsNotBlank(email: String) {
+        if (email.isNotBlank()) {
+            emailIsNotBlankLiveData.value = true
+            checkValidEmail(email)
+        } else
+            emailIsNotBlankLiveData.value = false
+    }
 
-    fun checkValidEmail(email: String) {
+    fun checkPasswordIsNotBlank(password: String) {
+        if (password.isNotBlank()) {
+            passwordIsNotBlankLiveData.value = true
+            checkValidPassword(password)
+        } else
+            passwordIsNotBlankLiveData.value = false
+
+    }
+
+
+    private fun checkValidEmail(email: String) {
         validationEmailLiveData.value = validation.emailValid(email)
         checkValidShared()
     }
 
-    fun checkValidPassword(password: String) {
+    private fun checkValidPassword(password: String) {
         validationPasswordLiveData.value = validation.passwordValid(password)
         checkValidShared()
     }
