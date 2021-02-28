@@ -8,7 +8,6 @@
   - Навигация - BottomNavigation
   - Изображения - Glide
   - Реактивное программирование - RxJava3
-  - Базы данных - Room
   - Сетевые запросы Retrofit
   - Material Design 
   - Обработка списков PagingLibrary
