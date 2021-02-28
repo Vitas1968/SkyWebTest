@@ -1,32 +1,157 @@
 package com.vitaly.skywebtest.ui.fragments
 
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.vitaly.skywebtest.R
+import com.vitaly.skywebtest.ui.fragments.baseframent.BaseFragment
+import com.vitaly.skywebtest.utils.ProgressDialogFragment
+import com.vitaly.skywebtest.utils.stringBuilder
 import com.vitaly.skywebtest.viewmodel.HomeViewModel
+import kotlinx.android.synthetic.main.fragment_home.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment() {
+private const val FRAGMENT_DIALOG_TAG = "team-5d62-46bf-ab6"
 
-    private lateinit var homeViewModel: HomeViewModel
+class HomeFragment : BaseFragment<HomeViewModel>() {
+
+
+    override val viewModel: HomeViewModel by viewModel()
+    private val progressDialog: ProgressDialogFragment by lazy {
+        ProgressDialogFragment()
+    }
+    private var message = "No data"
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-                ViewModelProvider(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView: TextView = root.findViewById(R.id.text_home)
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+        return inflater.inflate(R.layout.fragment_home, container, false)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setOnClickListenerBtnEnter()
+        subscribeOnWeather()
+        subscribeOnError()
+        subscribeOnProgress()
+        subscribeOnValidEmail()
+        subscribeOnValidPassword()
+        subscribeOnValidShared()
+    }
+
+    private fun setOnClickListenerBtnEnter() {
+        enter_btn.setOnClickListener {
+            val email = email_field_et.text.toString()
+            val password = password_field_et.text.toString()
+            checkEmailIsNotBlank(email)
+            checkPasswordIsNotBlank(password)
+        }
+    }
+
+
+    private fun subscribeOnWeather() {
+        viewModel.subscribeOnWeatherReady().observe(viewLifecycleOwner, { weather ->
+            val weatherMsg = arrayOf(
+                weather.cityName,
+                weather.temperature.toString(),
+                weather.description,
+                weather.humidity.toString()
+            )
+            message = stringBuilder(weatherMsg)
+
         })
-        return root
+    }
+
+    private fun subscribeOnError() {
+        viewModel.subscribeOnError().observe(viewLifecycleOwner, {
+        })
+    }
+
+    private fun subscribeOnValidEmail() {
+        viewModel.subscribeOnValidEmail().observe(viewLifecycleOwner, { validEmail ->
+            if (!validEmail) setErrorEmailField(getStringFromResource(R.string.email_invalid))
+            else setErrorEmailField(getStringFromResource(R.string.reset_error))
+        })
+    }
+
+    private fun subscribeOnValidPassword() {
+        viewModel.subscribeOnValidPassword().observe(viewLifecycleOwner, { validPass ->
+            if (!validPass) setErrorPasswordField(getStringFromResource(R.string.password_invalid))
+            else setErrorPasswordField(getStringFromResource(R.string.reset_error))
+        })
+    }
+
+    private fun subscribeOnValidShared() {
+        viewModel.subscribeOnValidShared().observe(viewLifecycleOwner, { validShared ->
+            if (validShared) {
+                cleanEditText()
+                showSnackBar(message)
+            }
+        })
+    }
+
+    private fun subscribeOnProgress() {
+        viewModel.subscribeOnProgress().observe(viewLifecycleOwner, { state ->
+            if (state) showDialogProgress() else hideDialogProgress()
+        })
+    }
+
+    private fun cleanEditText() {
+        password_field_et.setText("")
+        email_field_et.setText("")
+    }
+
+    private fun showSnackBar(message: String) {
+        view?.let { view ->
+            val snackBar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE)
+            snackBar.setAction("Close") { snackBar.dismiss() }.show()
+        }
+    }
+
+    private fun checkEmailIsNotBlank(email: String) {
+        if (email.isNotBlank()) {
+            setErrorEmailField(getStringFromResource(R.string.reset_error))
+            viewModel.checkValidEmail(email)
+        } else {
+            setErrorEmailField(getStringFromResource(R.string.email_is_empty))
+        }
+    }
+
+    private fun checkPasswordIsNotBlank(password: String) {
+        if (password.isNotBlank()) {
+            setErrorPasswordField(getStringFromResource(R.string.reset_error))
+            viewModel.checkValidPassword(password)
+        } else {
+            setErrorPasswordField(getStringFromResource(R.string.password_is_empty))
+        }
+    }
+
+    private fun getStringFromResource(resId: Int): String {
+        var string = ""
+        context?.getString(resId)?.let { string = it }
+        return string
+    }
+
+    private fun setErrorEmailField(error: String) {
+        email_layout.error = error
+    }
+
+    private fun setErrorPasswordField(error: String) {
+        password_layout.error = error
+    }
+
+    private fun showDialogProgress() {
+        activity?.supportFragmentManager?.let { fragMan ->
+            progressDialog.show(fragMan, FRAGMENT_DIALOG_TAG)
+        }
+    }
+
+    private fun hideDialogProgress() {
+        progressDialog.dismiss()
     }
 }
