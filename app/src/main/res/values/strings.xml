@@ -3,5 +3,17 @@
     <string name="title_home">Images</string>
     <string name="title_dashboard">Authorization</string>
     <string name="textview">Elon Mask</string>
+    <string name="base_url_image">https://picsum.photos/v2/</string>
+    <string name="base_url_weather">https://api.openweathermap.org/data/2.5/</string>
+    <string name="tet_button_enter">Войти</string>
+    <string name="hint_text_login">Email</string>
+    <string name="password_text_hint">Пароль</string>
+    <string name="error_tap_to_retry">ERROR !! Tap to retry.</string>
+
+    <string name="reset_error">""</string>
+    <string name="email_is_empty">Email is empty</string>
+    <string name="email_invalid">Email invalid</string>
+    <string name="password_invalid">Password invalid</string>
+    <string name="password_is_empty">Password is empty</string>
 
 </resources>
