@@ -42,15 +42,35 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
         subscribeOnValidEmail()
         subscribeOnValidPassword()
         subscribeOnValidShared()
+        subscribeOnEmailIsNotBlank()
+        subscribeOnPasswordIsNotBlank()
     }
 
     private fun setOnClickListenerBtnEnter() {
         enter_btn.setOnClickListener {
             val email = email_field_et.text.toString()
             val password = password_field_et.text.toString()
-            checkEmailIsNotBlank(email)
-            checkPasswordIsNotBlank(password)
+            viewModel.checkEmailIsNotBlank(email)
+            viewModel.checkPasswordIsNotBlank(password)
         }
+    }
+
+    private fun subscribeOnPasswordIsNotBlank() {
+        viewModel.subscribeOnPasswordIsNotBlank().observe(viewLifecycleOwner, { isNotBlank ->
+            if (isNotBlank)
+                setErrorPasswordField(getStringFromResource(R.string.reset_error))
+            else
+                setErrorPasswordField(getStringFromResource(R.string.password_is_empty))
+        })
+    }
+
+    private fun subscribeOnEmailIsNotBlank() {
+        viewModel.subscribeOnEmailIsNotBlank().observe(viewLifecycleOwner, { isNotBlank ->
+            if (isNotBlank)
+                setErrorEmailField(getStringFromResource(R.string.reset_error))
+            else
+                setErrorEmailField(getStringFromResource(R.string.email_is_empty))
+        })
     }
 
 
@@ -112,7 +132,7 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
             snackBar.setAction("Close") { snackBar.dismiss() }.show()
         }
     }
-
+/*
     private fun checkEmailIsNotBlank(email: String) {
         if (email.isNotBlank()) {
             setErrorEmailField(getStringFromResource(R.string.reset_error))
@@ -122,6 +142,8 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
         }
     }
 
+ */
+/*
     private fun checkPasswordIsNotBlank(password: String) {
         if (password.isNotBlank()) {
             setErrorPasswordField(getStringFromResource(R.string.reset_error))
@@ -130,6 +152,8 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
             setErrorPasswordField(getStringFromResource(R.string.password_is_empty))
         }
     }
+
+ */
 
     private fun getStringFromResource(resId: Int): String {
         var string = ""
