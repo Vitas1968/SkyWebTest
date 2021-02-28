@@ -13,5 +13,5 @@
     <dimen name="text_tip">12sp</dimen>
     <dimen name="margin_top_8dp">8dp</dimen>
     <dimen name="margin_top_4dp">4dp</dimen>
-    <dimen name="stroke_width">8dp</dimen>
+    <dimen name="stroke_width">2dp</dimen>
 </resources>
