@@ -12,36 +12,36 @@ class Validation {
     private val passwordPattern = Pattern.compile(PASSWORD_PATTERN)
     private val emailPattern = Pattern.compile(EMAIL_PATTERN)
 
-    fun checkEmailIsNotBlank(email: String,
-                             emailIsNotBlankLiveData : MutableLiveData<Boolean>,
-                             validationEmailLiveData : MutableLiveData<Boolean>,
-                             checkValidShared: () -> Unit
-    ){
+    fun checkEmailIsNotBlank(
+        email: String,
+        emailIsNotBlankLiveData: MutableLiveData<Boolean>,
+        validationEmailLiveData: MutableLiveData<Boolean>,
+        checkValidShared: () -> Unit
+    ) {
         if (email.isNotBlank()) {
             emailIsNotBlankLiveData.value = true
-            emailValid(email,validationEmailLiveData,checkValidShared)
-        }
-        else
+            emailValid(email, validationEmailLiveData, checkValidShared)
+        } else
             emailIsNotBlankLiveData.value = false
     }
 
     fun checkPasswordIsNotBlank(
         password: String,
-        passwordIsNotBlankLiveData : MutableLiveData<Boolean>,
-        validationPasswordLiveData : MutableLiveData<Boolean>,
+        passwordIsNotBlankLiveData: MutableLiveData<Boolean>,
+        validationPasswordLiveData: MutableLiveData<Boolean>,
         checkValidShared: () -> Unit
-    ){
+    ) {
         if (password.isNotBlank()) {
             passwordIsNotBlankLiveData.value = true
-            passwordValid(password,validationPasswordLiveData,checkValidShared)
-        }
-        else
+            passwordValid(password, validationPasswordLiveData, checkValidShared)
+        } else
             passwordIsNotBlankLiveData.value = false
     }
 
-    private fun emailValid(email: String,
-                           validationEmailLiveData : MutableLiveData<Boolean>,
-                           checkValidShared: () -> Unit
+    private fun emailValid(
+        email: String,
+        validationEmailLiveData: MutableLiveData<Boolean>,
+        checkValidShared: () -> Unit
     ) {
         validationEmailLiveData.value = emailPattern.matcher(email).matches()
         checkValidShared()
@@ -49,9 +49,9 @@ class Validation {
 
     fun passwordValid(
         password: String,
-        validationPasswordLiveData : MutableLiveData<Boolean>,
-        checkValidShared: () -> Unit)
-    {
+        validationPasswordLiveData: MutableLiveData<Boolean>,
+        checkValidShared: () -> Unit
+    ) {
         validationPasswordLiveData.value = passwordPattern.matcher(password).matches()
         checkValidShared()
     }
