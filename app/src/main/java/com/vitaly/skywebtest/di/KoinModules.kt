@@ -25,7 +25,6 @@ val photosModule = module {
     single<Gson> {
         GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
-            .excludeFieldsWithoutExposeAnnotation()
             .create()
     }
     single<IImageRemoteDataSource>(named("PhotosWebService")) {
