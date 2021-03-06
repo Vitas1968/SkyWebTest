@@ -17,7 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 private const val FRAGMENT_DIALOG_TAG = "team-5d62-46bf-ab6"
 
 class HomeFragment : BaseFragment<HomeViewModel>() {
-    
+
     override val viewModel: HomeViewModel by viewModel()
     private val progressDialog: ProgressDialogFragment by lazy {
         ProgressDialogFragment()
@@ -49,8 +49,8 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
         enter_btn.setOnClickListener {
             val email = email_field_et.text.toString()
             val password = password_field_et.text.toString()
-            viewModel.checkEmailIsNotBlank(email)
-            viewModel.checkPasswordIsNotBlank(password)
+            viewModel.emailValid(email)
+            viewModel.passwordValid(password)
         }
     }
 
