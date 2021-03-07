@@ -79,6 +79,4 @@ class HomeViewModel(
                 errorLiveData.value = it
             })
     }
-
-
 }
