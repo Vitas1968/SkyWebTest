@@ -5,6 +5,6 @@ import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 
 interface IWeatherRemoteDataSource {
-    @GET("weather?id=553915&lang=ru&units=metric")
+    @GET("weather")
     fun getWeather(): Single<WeatherResponse>
 }
