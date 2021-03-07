@@ -1,10 +1,8 @@
 package com.vitaly.skywebtest.application
 
+
 import android.app.Application
-import com.vitaly.skywebtest.di.authModule
-
-
-import com.vitaly.skywebtest.di.photosModule
+import com.vitaly.skywebtest.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -15,7 +13,7 @@ class SkyWebTestApp : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@SkyWebTestApp)
-            modules(photosModule,authModule)
+            modules(appModule)
         }
     }
 }
