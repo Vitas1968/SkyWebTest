@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.snackbar.Snackbar
 import com.vitaly.skywebtest.R
+import com.vitaly.skywebtest.di.injectDependenciesIntoHome
 import com.vitaly.skywebtest.ui.fragments.baseframent.BaseFragment
 import com.vitaly.skywebtest.utils.ProgressDialogFragment
 import com.vitaly.skywebtest.utils.stringBuilder
@@ -18,8 +19,7 @@ private const val FRAGMENT_DIALOG_TAG = "team-5d62-46bf-ab6"
 
 class HomeFragment : BaseFragment<HomeViewModel>() {
 
-
-    override val viewModel: HomeViewModel by viewModel()
+    override lateinit var viewModel: HomeViewModel
     private val progressDialog: ProgressDialogFragment by lazy {
         ProgressDialogFragment()
     }
@@ -30,6 +30,8 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        injectDependenciesIntoHome()
+        initViewModel()
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -46,12 +48,17 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
         subscribeOnPasswordIsNotBlank()
     }
 
+    private fun initViewModel() {
+        val model: HomeViewModel by viewModel()
+        viewModel = model
+    }
+
     private fun setOnClickListenerBtnEnter() {
         enter_btn.setOnClickListener {
             val email = email_field_et.text.toString()
             val password = password_field_et.text.toString()
-            viewModel.checkEmailIsNotBlank(email)
-            viewModel.checkPasswordIsNotBlank(password)
+            viewModel.emailValid(email)
+            viewModel.passwordValid(password)
         }
     }
 

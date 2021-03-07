@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.vitaly.skywebtest.R
+import com.vitaly.skywebtest.di.injectDependenciesIntoDashBoard
 import com.vitaly.skywebtest.ui.adapters.ImageListAdapter
 import com.vitaly.skywebtest.ui.fragments.baseframent.BaseFragment
 import com.vitaly.skywebtest.utils.State
@@ -16,7 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
 
-    override val viewModel: DashboardViewModel by viewModel()
+    override lateinit var viewModel: DashboardViewModel
     private lateinit var photosAdapter: ImageListAdapter
 
     override fun onCreateView(
@@ -24,6 +25,8 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        injectDependenciesIntoDashBoard()
+        initViewModel()
         return inflater.inflate(R.layout.fragment_dashboard, container, false)
     }
 
@@ -31,6 +34,11 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
         super.onViewCreated(view, savedInstanceState)
         initRecycler()
         initState()
+    }
+
+    private fun initViewModel() {
+        val model: DashboardViewModel by viewModel()
+        viewModel = model
     }
 
     private fun initRecycler() {

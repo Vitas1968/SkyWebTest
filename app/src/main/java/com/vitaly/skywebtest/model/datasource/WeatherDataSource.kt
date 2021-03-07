@@ -13,7 +13,6 @@ class WeatherDataSource(
             .flatMap {
                 val weatherReady = WeatherReady(
                     cityName = it.name,
-                    cityId = it.id,
                     temperature = it.main.temp,
                     humidity = it.main.humidity,
                     description = it.weather[0].description

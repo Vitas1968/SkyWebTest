@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vitaly.skywebtest.model.datasource.WeatherDataSource
 import com.vitaly.skywebtest.model.entity.WeatherReady
+import com.vitaly.skywebtest.utils.Validation
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import java.util.regex.Pattern
 
 
 class HomeViewModel(
@@ -20,7 +20,7 @@ class HomeViewModel(
     private val validationSharedLiveData = MutableLiveData<Boolean>()
     private val emailIsNotBlankLiveData = MutableLiveData<Boolean>()
     private val passwordIsNotBlankLiveData = MutableLiveData<Boolean>()
-    private val validation: Validation = Validation()
+    private val validation: Validation by lazy { Validation() }
 
     init {
         validationSharedLiveData.value = false
@@ -42,32 +42,20 @@ class HomeViewModel(
 
     fun subscribeOnError(): LiveData<Throwable> = errorLiveData
 
-    fun checkEmailIsNotBlank(email: String) {
-        if (email.isNotBlank()) {
-            emailIsNotBlankLiveData.value = true
-            checkValidEmail(email)
-        } else
-            emailIsNotBlankLiveData.value = false
+    fun emailValid(email: String) {
+        validation.checkEmailIsNotBlank(
+            email,
+            emailIsNotBlankLiveData,
+            validationEmailLiveData
+        ) { checkValidShared() }
     }
 
-    fun checkPasswordIsNotBlank(password: String) {
-        if (password.isNotBlank()) {
-            passwordIsNotBlankLiveData.value = true
-            checkValidPassword(password)
-        } else
-            passwordIsNotBlankLiveData.value = false
-
-    }
-
-
-    private fun checkValidEmail(email: String) {
-        validationEmailLiveData.value = validation.emailValid(email)
-        checkValidShared()
-    }
-
-    private fun checkValidPassword(password: String) {
-        validationPasswordLiveData.value = validation.passwordValid(password)
-        checkValidShared()
+    fun passwordValid(password: String) {
+        validation.checkPasswordIsNotBlank(
+            password,
+            passwordIsNotBlankLiveData,
+            validationPasswordLiveData
+        ) { checkValidShared() }
     }
 
     private fun checkValidShared() {
@@ -90,22 +78,5 @@ class HomeViewModel(
             }, {
                 errorLiveData.value = it
             })
-    }
-
-    private class Validation {
-        private val EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
-                "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
-
-        private val PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}\$"
-
-        fun emailValid(email: String): Boolean {
-            val pattern = Pattern.compile(EMAIL_PATTERN)
-            return pattern.matcher(email).matches()
-        }
-
-        fun passwordValid(password: String): Boolean {
-            val pattern = Pattern.compile(PASSWORD_PATTERN)
-            return pattern.matcher(password).matches()
-        }
     }
 }
