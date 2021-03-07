@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="4dp"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.DashboardFragment">
@@ -33,12 +33,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_margin="@dimen/layout_margin"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:layout_editor_absoluteX="49dp"
         tools:layout_editor_absoluteY="-299dp"
         tools:listitem="@layout/item_image_card" />
-
-
-
 </RelativeLayout>
