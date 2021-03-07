@@ -47,7 +47,7 @@ class Validation {
         checkValidShared()
     }
 
-    fun passwordValid(
+    private fun passwordValid(
         password: String,
         validationPasswordLiveData: MutableLiveData<Boolean>,
         checkValidShared: () -> Unit
